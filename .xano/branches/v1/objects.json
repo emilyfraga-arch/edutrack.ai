@@ -2392,5 +2392,61 @@
     "staged": false,
     "sha256": "fa1d37fa9da193fa4692171d763ac9a461ee1cec1adfed77525fe4ee524f1c00",
     "original": "Ly8gVGhlIFhhbm8gRXhhbXBsZSBBZ2VudCBnZXRzIHlvdSBzdGFydGVkIHdpdGggYSBiYXNpYyBBSSBBZ2VudCB0byBpbnRlZ3JhdGUgaW50byB5b3VyIHdvcmtmbG93cy4gWW91IGNhbiBlYXNpbHkgYnVpbGQgb24gdG9wIG9mIGl0LCBjb25uZWN0IHRvb2xzLCBhbmQgYWRqdXN0IHRoZSBwcm9tcHQgdG8gYWRhcHQgdG8geW91ciB1c2UgY2FzZS4KLy8gCi8vIEl0IGNvbWVzIHdpdGggYSBUb29sIGNvbm5lY3RlZCB0byB0aGUgWGFubyBEb2N1bWVudGF0aW9uLCB3aGljaCBoYXMgY29udGV4dCB0byB0aGUgWGFubyBEb2NzLiBUbyB0ZXN0IHRoZSBCYXNlbGluZSBBZ2VudCwgb3BlbiB0aGUgRGVtbyBBUEkgaW4gdGhlIEF1dGhlbnRpY2F0aW9uIEFQSSBHcm91cC4KYWdlbnQgIlhhbm8gRXhhbXBsZSBBZ2VudCIgewogIGNhbm9uaWNhbCA9ICJ3LTd0VEJlRCIKICB0YWdzID0gWyJ4YW5vOnF1aWNrLXN0YXJ0Il0KICBsbG0gPSB7CiAgICB0eXBlICAgICAgICAgICAgOiAieGFuby1mcmVlIgogICAgc3lzdGVtX3Byb21wdCAgIDogIiIiCiAgICAgIFlvdSBhcmUgYSBoZWxwZnVsIGFuZCB2ZXJzYXRpbGUgQUkgYXNzaXN0YW50LiBZb3VyIGNvcmUgcmVzcG9uc2liaWxpdHkgaXMgdG8gdW5kZXJzdGFuZCBhbmQgcmVzcG9uZCB0byB1c2VyIGlucXVpcmllcyBieSBwcm92aWRpbmcgYWNjdXJhdGUsIGNsZWFyLCBhbmQgY29uY2lzZSBpbmZvcm1hdGlvbiBvciBjb21wbGV0aW5nIGdlbmVyYWwgdGFza3MgYXMgcmVxdWVzdGVkLgogICAgICAKICAgICAgWW91IHJlbHkgc29sZWx5IG9uIHlvdXIgZ2VuZXJhbCBrbm93bGVkZ2UgYW5kIHJlYXNvbmluZyBhYmlsaXRpZXMuCiAgICAgIAogICAgICBUb29scyBhdmFpbGFibGU6CiAgICAgIC1Zb3UgY2FuIFhhbm8gZG9jdW1lbnRhdGlvbiB3aXRoIHRoZSB0b29sIFNlYXJjaFhhbm9Eb2NzLiBUaGlzIGFjY2VzcyB0aGUgcGFnZXMgb2YgdGhlIFhhbm8gZG9jdW1lbnRhdGlvbiwgd2hpY2ggY2FuIGJlIHVzZWQgdG8gYW5zd2VyIHF1ZXN0aW9ucyBiYXNlZCBvbiB0aGUgc2VhcmNoIHF1ZXJ5LgogICAgICAKICAgICAgV2hlbiByZXNwb25kaW5nOgogICAgICAtIEFsd2F5cyBzdHJpdmUgdG8gYmUgaGVscGZ1bCBhbmQgcHJvdmlkZSBhY2N1cmF0ZSBpbmZvcm1hdGlvbi4KICAgICAgLSBJZiBhIHRhc2sgcmVxdWlyZXMgZXh0ZXJuYWwgaW5mb3JtYXRpb24gb3IgY2FwYWJpbGl0aWVzIHlvdSBkbyBub3QgcG9zc2VzcywgY2xlYXJseSBzdGF0ZSB5b3VyIGxpbWl0YXRpb25zLgogICAgICAtIEV4cGxhaW4geW91ciByZWFzb25pbmcgb3IgdGhvdWdodCBwcm9jZXNzIHdoZW4gYXBwcm9wcmlhdGUsIGVzcGVjaWFsbHkgZm9yIGNvbXBsZXggaW5xdWlyaWVzLgogICAgICAtIFByb3ZpZGUgY2xlYXIgYW5kIGVhc3ktdG8tdW5kZXJzdGFuZCByZXNwb25zZXMuCiAgICAgIAogICAgICAjIyMgRHluYW1pYyBDb250ZXh0CiAgICAgIFlvdSB3aWxsIHJlY2VpdmUgdGhlIHVzZXIncyBxdWVyeSBvciBtZXNzYWdlIGFzIGFuIGFyZ3VtZW50LgogICAgICAKICAgICAgIyMjIE91dHB1dCBFeHBlY3RhdGlvbnMKICAgICAgLSBSZXNwb25zZXMgc2hvdWxkIGJlIGNsZWFyLCBjb25jaXNlLCBhbmQgZGlyZWN0bHkgYWRkcmVzcyB0aGUgdXNlcidzIHF1ZXJ5LgogICAgICAtIE91dHB1dCBzaG91bGQgYmUgaW4gYSByZWFkYWJsZSBNYXJrZG93biBmb3JtYXQgaWYgc3RydWN0dXJpbmcgaW5mb3JtYXRpb24gb3IgcHJvdmlkaW5nIGxpc3RzLgogICAgICAtIEVuc3VyZSB0aGUgcmVzcG9uc2UgY29tcGxldGVseSBhbnN3ZXJzIHRoZSB1c2VyJ3MgcmVxdWVzdCBiYXNlZCBvbiB0aGUgaW5mb3JtYXRpb24gYXZhaWxhYmxlIHRvIHlvdS4KICAgICAgIiIiCiAgICBtYXhfc3RlcHMgICAgICAgOiA1CiAgICBtZXNzYWdlcyAgICAgICAgOiAie3sgJGFyZ3MubWVzc2FnZXN8anNvbl9lbmNvZGUoKSB9fSIKICAgIHRlbXBlcmF0dXJlICAgICA6IDAKICAgIHNlYXJjaF9ncm91bmRpbmc6IGZhbHNlCiAgICB0aGlua2luZ190b2tlbnMgOiAwCiAgICBpbmNsdWRlX3Rob3VnaHRzOiBmYWxzZQogICAgYmFzZVVSTCAgICAgICAgIDogIiIKICAgIGhlYWRlcnMgICAgICAgICA6ICIiCiAgICBzYWZldHlfc2V0dGluZ3MgOiAiIgogICAgZHluYW1pY19yZXRyaXZhbDogIiIKICB9CgogIHRvb2xzID0gW3tuYW1lOiAic2VhcmNoX3hhbm9fZG9jcyJ9XQp9"
+  },
+  {
+    "id": 0,
+    "path": "tables/subject.xs",
+    "status": "new",
+    "type": "table",
+    "staged": false
+  },
+  {
+    "id": 0,
+    "path": "tables/subjects.xs",
+    "status": "new",
+    "type": "table",
+    "staged": false
+  },
+  {
+    "id": 0,
+    "path": "apis/subjects/api_group.xs",
+    "status": "new",
+    "type": "api_group",
+    "staged": false
+  },
+  {
+    "id": 0,
+    "path": "apis/subjects/subjects_GET.xs",
+    "status": "new",
+    "type": "api_endpoint",
+    "staged": false
+  },
+  {
+    "id": 0,
+    "path": "apis/subjects/subjects_POST.xs",
+    "status": "new",
+    "type": "api_endpoint",
+    "staged": false
+  },
+  {
+    "id": 0,
+    "path": "apis/subjects/subjects_id_GET.xs",
+    "status": "new",
+    "type": "api_endpoint",
+    "staged": false
+  },
+  {
+    "id": 0,
+    "path": "apis/subjects/subjects_id_PATCH.xs",
+    "status": "new",
+    "type": "api_endpoint",
+    "staged": false
+  },
+  {
+    "id": 0,
+    "path": "apis/subjects/subjects_id_DELETE.xs",
+    "status": "new",
+    "type": "api_endpoint",
+    "staged": false
   }
 ]
