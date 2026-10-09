@@ -1,0 +1,28 @@
+// Status possíveis dos Pedidos
+// de Clientes
+table STATUS_PEDIDO {
+  auth = false
+
+  schema {
+    int id
+    timestamp created_at?=now {
+      visibility = "private"
+    }
+  
+    text status? filters=trim
+    text status_para? filters=trim
+  }
+
+  index = [
+    {type: "primary", field: [{name: "id"}]}
+    {
+      type : "btree|unique"
+      field: [
+        {name: "status", op: "desc"}
+        {name: "status_para", op: "asc"}
+      ]
+    }
+  ]
+
+  guid = "YVzYITEITtPo2jk8AQ356aNY3po"
+}
