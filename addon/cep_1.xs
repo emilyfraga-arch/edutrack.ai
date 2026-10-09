@@ -1,0 +1,16 @@
+addon CEP_1 {
+  input {
+    int CEP_id? {
+      table = "CEP"
+    }
+  }
+
+  stack {
+    db.query CEP {
+      where = $db.CEP.id == $input.CEP_id
+      return = {type: "single"}
+    }
+  }
+
+  guid = "xXxvO4Ye_Ef4qW6Og8uF8UruDww"
+}

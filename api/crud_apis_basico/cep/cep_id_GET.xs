@@ -1,0 +1,23 @@
+// Get CEP record
+query "cep/{cep_id}" verb=GET {
+  api_group = "CRUD_APIS_BASICO"
+
+  input {
+    int cep_id? filters=min:1
+  }
+
+  stack {
+    db.get CEP {
+      field_name = "id"
+      field_value = $input.cep_id
+    } as $cep
+  
+    precondition ($cep != null) {
+      error_type = "notfound"
+      error = "Not Found."
+    }
+  }
+
+  response = $cep
+  guid = "_M-J_D2OrQbugtPNXF_7hh0BfOs"
+}

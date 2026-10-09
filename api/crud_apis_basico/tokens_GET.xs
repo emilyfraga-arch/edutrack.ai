@@ -1,0 +1,16 @@
+// Query all TOKENS records
+query tokens verb=GET {
+  api_group = "CRUD_APIS_BASICO"
+
+  input {
+  }
+
+  stack {
+    db.query TOKENS {
+      return = {type: "list"}
+    } as $tokens
+  }
+
+  response = $tokens
+  guid = "JEdXy8ZQc5dX1tnMo6hgI8jz97o"
+}
