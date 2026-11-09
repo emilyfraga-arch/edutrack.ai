@@ -32,5 +32,6 @@ query activity_grades verb=POST {
   }
 
   response = $new_grade
+  guid = "-oC_sOXo8UO8mOY5V6D5lEQj8oY"
 }
 
