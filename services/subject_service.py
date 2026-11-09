@@ -1,62 +1,94 @@
 import os
-import streamlit as st
-from typing import List, Dict, Any, Optional
+from typing import Tuple, List, Dict, Any, Optional
+import requests
+from services.auth_service import get_api_url
 
-try:
-    import requests
-except ImportError:
-    requests = None
+def get_subjects(token: Optional[str] = None, status: Optional[str] = None) -> Tuple[bool, Any]:
+    """Obtém a lista de disciplinas da tabela subjects do Xano para o usuário autenticado."""
+    if not token:
+        return False, "Usuário não autenticado. Faça login para visualizar suas disciplinas."
 
-# Configurações do Xano via variáveis de ambiente ou segredos do Streamlit
-XANO_API_URL = os.getenv("XANO_API_URL", "")
-XANO_AUTH_TOKEN = os.getenv("XANO_AUTH_TOKEN", "")
+    api_url = get_api_url()
+    if not api_url:
+        return False, "URL base da API não configurada no arquivo .env."
 
-def _init_local_store():
-    """Inicializa armazenamento local em sessão para modo de desenvolvimento ou fallback offline."""
-    if "subjects_store" not in st.session_state:
-        st.session_state.subjects_store = [
-            {
-                "id": 1,
-                "name": "Cálculo I",
-                "code": "MAT101",
-                "professor": "Dr. Silva",
-                "semester": "2026.1",
-                "status": "active"
-            },
-            {
-                "id": 2,
-                "name": "Algoritmos e Estruturas de Dados",
-                "code": "CC102",
-                "professor": "Dra. Santos",
-                "semester": "2026.1",
-                "status": "active"
-            }
-        ]
-
-def get_subjects(status: Optional[str] = "active") -> List[Dict[str, Any]]:
-    """Obtém a lista de disciplinas (via Xano API ou fallback local)."""
-    _init_local_store()
-
-    if XANO_API_URL and requests is not None:
-        try:
-            headers = {"Authorization": f"Bearer {XANO_AUTH_TOKEN}"} if XANO_AUTH_TOKEN else {}
-            params = {"status": status} if status else {}
-            response = requests.get(f"{XANO_API_URL}/subjects", headers=headers, params=params, timeout=5)
-            if response.status_code == 200:
-                return response.json()
-        except Exception as e:
-            st.sidebar.warning(f"⚠️ Modo offline ativo (Xano indisponível: {e})")
-
-    # Fallback local
-    items = st.session_state.subjects_store
+    url = f"{api_url}/subjects"
+    headers = {
+        "Authorization": f"Bearer {token}"
+    }
+    params = {}
     if status:
-        return [item for item in items if item.get("status") == status]
-    return list(items)
+        params["status"] = status
 
-def create_subject(name: str, code: str = "", professor: str = "", semester: str = "") -> Optional[Dict[str, Any]]:
-    """Cadastra uma nova disciplina (via Xano API ou fallback local)."""
-    _init_local_store()
+    try:
+        response = requests.get(url, headers=headers, params=params, timeout=10)
+        if response.status_code == 200:
+            data = response.json() if response.content else []
+            if isinstance(data, list):
+                return True, data
+            return True, [data]
+        elif response.status_code == 401:
+            return False, "Sessão expirada ou não autorizada. Faça login novamente."
+        else:
+            try:
+                err_data = response.json()
+                msg = err_data.get("message") or err_data.get("error") or f"Erro {response.status_code} ao buscar disciplinas."
+            except Exception:
+                msg = f"Erro {response.status_code} ao buscar disciplinas."
+            return False, msg
+    except requests.exceptions.Timeout:
+        return False, "Tempo limite de conexão esgotado ao contatar o servidor Xano."
+    except requests.exceptions.RequestException as e:
+        return False, f"Falha de conexão com o servidor Xano: {e}"
 
+def get_subject_by_id(subject_id: int, token: Optional[str] = None) -> Tuple[bool, Any]:
+    """Recupera os detalhes de uma disciplina específica da tabela subjects do Xano."""
+    if not token:
+        return False, "Usuário não autenticado. Faça login para consultar a disciplina."
+
+    api_url = get_api_url()
+    if not api_url:
+        return False, "URL base da API não configurada no arquivo .env."
+
+    url = f"{api_url}/subjects/{subject_id}"
+    headers = {
+        "Authorization": f"Bearer {token}"
+    }
+
+    try:
+        response = requests.get(url, headers=headers, timeout=10)
+        if response.status_code == 200:
+            data = response.json() if response.content else {}
+            return True, data
+        elif response.status_code == 401:
+            return False, "Sessão expirada ou não autorizada. Faça login novamente."
+        elif response.status_code == 404:
+            return False, "Disciplina não encontrada ou não pertence ao usuário."
+        else:
+            try:
+                err_data = response.json()
+                msg = err_data.get("message") or err_data.get("error") or f"Erro {response.status_code} ao buscar detalhes da disciplina."
+            except Exception:
+                msg = f"Erro {response.status_code} ao buscar detalhes da disciplina."
+            return False, msg
+    except requests.exceptions.Timeout:
+        return False, "Tempo limite de conexão esgotado ao contatar o servidor Xano."
+    except requests.exceptions.RequestException as e:
+        return False, f"Falha de conexão com o servidor Xano: {e}"
+
+def create_subject(name: str, code: str = "", professor: str = "", semester: str = "", token: Optional[str] = None) -> Tuple[bool, Any]:
+    """Cadastra uma nova disciplina na tabela subjects do Xano para o usuário autenticado."""
+    if not token:
+        return False, "Usuário não autenticado. Faça login para cadastrar disciplinas."
+
+    api_url = get_api_url()
+    if not api_url:
+        return False, "URL base da API não configurada no arquivo .env."
+
+    url = f"{api_url}/subjects"
+    headers = {
+        "Authorization": f"Bearer {token}"
+    }
     payload = {
         "name": name.strip(),
         "code": code.strip(),
@@ -64,44 +96,85 @@ def create_subject(name: str, code: str = "", professor: str = "", semester: str
         "semester": semester.strip()
     }
 
-    if XANO_API_URL and requests is not None:
-        try:
-            headers = {"Authorization": f"Bearer {XANO_AUTH_TOKEN}"} if XANO_AUTH_TOKEN else {}
-            response = requests.post(f"{XANO_API_URL}/subjects", json=payload, headers=headers, timeout=5)
-            if response.status_code in [200, 201]:
-                return response.json()
-        except Exception as e:
-            st.sidebar.warning(f"⚠️ Erro ao salvar no Xano ({e}), usando armazenamento local.")
+    try:
+        response = requests.post(url, json=payload, headers=headers, timeout=10)
+        if response.status_code in [200, 201]:
+            data = response.json() if response.content else {}
+            return True, data
+        elif response.status_code == 401:
+            return False, "Sessão expirada ou não autorizada. Faça login novamente."
+        else:
+            try:
+                err_data = response.json()
+                msg = err_data.get("message") or err_data.get("error") or f"Erro {response.status_code} ao cadastrar disciplina."
+            except Exception:
+                msg = f"Erro {response.status_code} ao cadastrar disciplina."
+            return False, msg
+    except requests.exceptions.Timeout:
+        return False, "Tempo limite de conexão esgotado ao cadastrar disciplina."
+    except requests.exceptions.RequestException as e:
+        return False, f"Falha de conexão com o servidor Xano: {e}"
 
-    # Fallback local
-    new_id = max([s["id"] for s in st.session_state.subjects_store], default=0) + 1
-    new_subject = {
-        "id": new_id,
-        "name": payload["name"],
-        "code": payload["code"],
-        "professor": payload["professor"],
-        "semester": payload["semester"],
-        "status": "active"
+def update_subject(subject_id: int, data: Dict[str, Any], token: Optional[str] = None) -> Tuple[bool, Any]:
+    """Atualiza dados de uma disciplina existente na tabela subjects do Xano."""
+    if not token:
+        return False, "Usuário não autenticado. Faça login para atualizar disciplinas."
+
+    api_url = get_api_url()
+    if not api_url:
+        return False, "URL base da API não configurada no arquivo .env."
+
+    url = f"{api_url}/subjects/{subject_id}"
+    headers = {
+        "Authorization": f"Bearer {token}"
     }
-    st.session_state.subjects_store.append(new_subject)
-    return new_subject
 
-def delete_subject(subject_id: int) -> bool:
-    """Remove ou arquiva uma disciplina por ID."""
-    _init_local_store()
+    try:
+        response = requests.patch(url, json=data, headers=headers, timeout=10)
+        if response.status_code in [200, 204]:
+            res_data = response.json() if response.content else {"success": True}
+            return True, res_data
+        elif response.status_code == 401:
+            return False, "Sessão expirada ou não autorizada. Faça login novamente."
+        elif response.status_code == 404:
+            return False, "Disciplina não encontrada ou não pertence ao usuário."
+        else:
+            try:
+                err_data = response.json()
+                msg = err_data.get("message") or err_data.get("error") or f"Erro {response.status_code} ao atualizar disciplina."
+            except Exception:
+                msg = f"Erro {response.status_code} ao atualizar disciplina."
+            return False, msg
+    except requests.exceptions.Timeout:
+        return False, "Tempo limite de conexão esgotado ao atualizar disciplina."
+    except requests.exceptions.RequestException as e:
+        return False, f"Falha de conexão com o servidor Xano: {e}"
 
-    if XANO_API_URL and requests is not None:
-        try:
-            headers = {"Authorization": f"Bearer {XANO_AUTH_TOKEN}"} if XANO_AUTH_TOKEN else {}
-            response = requests.delete(f"{XANO_API_URL}/subjects/{subject_id}", headers=headers, timeout=5)
-            if response.status_code in [200, 204]:
-                return True
-        except Exception:
-            pass
+def delete_subject(subject_id: int, token: Optional[str] = None) -> Tuple[bool, Any]:
+    """Remove uma disciplina na tabela subjects do Xano."""
+    if not token:
+        return False, "Usuário não autenticado."
 
-    # Fallback local
-    st.session_state.subjects_store = [
-        s for s in st.session_state.subjects_store if s.get("id") != subject_id
-    ]
-    return True
+    api_url = get_api_url()
+    if not api_url:
+        return False, "URL base da API não configurada no arquivo .env."
 
+    url = f"{api_url}/subjects/{subject_id}"
+    headers = {
+        "Authorization": f"Bearer {token}"
+    }
+
+    try:
+        response = requests.delete(url, headers=headers, timeout=10)
+        if response.status_code in [200, 204]:
+            return True, "Disciplina removida com sucesso."
+        elif response.status_code == 401:
+            return False, "Sessão expirada ou não autorizada. Faça login novamente."
+        elif response.status_code == 404:
+            return False, "Disciplina não encontrada ou não pertence ao usuário."
+        else:
+            return False, f"Erro {response.status_code} ao remover disciplina."
+    except requests.exceptions.Timeout:
+        return False, "Tempo limite de conexão esgotado ao excluir disciplina."
+    except requests.exceptions.RequestException as e:
+        return False, f"Falha de conexão com o servidor Xano: {e}"

@@ -44,5 +44,6 @@ table activity_grades {
     {type: "btree", field: [{name: "user_id", op: "asc"}]}
     {type: "btree", field: [{name: "academic_task_id", op: "asc"}, {name: "student_id", op: "asc"}]}
   ]
+  guid = "_cPR9xk9G4YguljIza_w6zjy4lI"
 }
 

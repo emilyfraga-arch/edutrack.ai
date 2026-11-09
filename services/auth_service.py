@@ -3,11 +3,9 @@ from typing import Tuple, Dict, Any, Optional
 import requests
 
 def get_base_url() -> str:
-    """Carrega a URL base do Xano a partir do arquivo .env ou variáveis de ambiente."""
-    # Tenta obter diretamente do ambiente
+    """Carrega a URL base de autenticação do Xano a partir do arquivo .env ou variáveis de ambiente."""
     base_url = os.getenv("XANO_AUTH_BASE_URL")
     
-    # Se não encontrado, lê o arquivo .env na raiz do projeto
     if not base_url:
         root_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
         env_path = os.path.join(root_dir, ".env")
@@ -27,6 +25,30 @@ def get_base_url() -> str:
                         break
                         
     return (base_url or "").rstrip("/")
+
+def get_api_url() -> str:
+    """Carrega a URL base da API CRUD do Xano a partir do arquivo .env ou variáveis de ambiente."""
+    api_url = os.getenv("XANO_API_URL")
+    
+    if not api_url:
+        root_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        env_path = os.path.join(root_dir, ".env")
+        if os.path.exists(env_path):
+            with open(env_path, "r", encoding="utf-8") as f:
+                for line in f:
+                    line = line.strip()
+                    if not line or line.startswith("#"):
+                        continue
+                    if "=" in line:
+                        k, v = line.split("=", 1)
+                        if k.strip() == "XANO_API_URL":
+                            api_url = v.strip().strip('"').strip("'")
+                            break
+                            
+    if not api_url:
+        api_url = get_base_url()
+        
+    return (api_url or "").rstrip("/")
 
 def signup(name: str, email: str, password: str) -> Tuple[bool, Dict[str, Any]]:
     """Cadastra um novo usuário no endpoint auth/signup do Xano."""

@@ -1,4 +1,4 @@
-// Teste de tabela para armazenar tokens de clientes da Assas. A tabela é usada para validar a autenticidade dos tokens e associá-los aos clientes correspondentes.
+// Cartões Tokenizados após
 // validações
 table CARTAOTOKNZD {
   auth = false
