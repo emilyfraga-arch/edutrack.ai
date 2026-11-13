@@ -87,8 +87,12 @@ def login(email: str, password: str) -> Tuple[bool, Dict[str, Any]]:
     }
     
     try:
+        print("URL de login:", url)  # Debugging line
+        print(f"Attempting login with payload: {payload}")  # Debugging line
+
         response = requests.post(url, json=payload, timeout=10)
         data = response.json() if response.content else {}
+        print(f"Login response: {data}")  # Debugging line
         if response.status_code == 200:
             return True, data
         else:
