@@ -1,0 +1,16 @@
+# EduTrack AI - Dependências do Projeto
+
+# Framework de interface web
+streamlit>=1.30.0
+
+# Cliente HTTP para consumo dos endpoints do Xano
+requests>=2.28.0
+
+# Geração de relatórios e documentos em PDF
+reportlab>=4.0.0
+
+# Manipulação de dados e tabelas
+pandas>=2.0.0
+
+# Gerenciamento de variáveis de ambiente (.env)
+python-dotenv>=1.0.0
