@@ -1,19 +1,33 @@
 import streamlit as st
 from services.task_service import get_academic_tasks, create_academic_task, update_task_status, delete_academic_task
 from services.subject_service import get_subjects
+from styles.theme import apply_custom_theme, render_page_header
 
-st.title("Minhas Tarefas")
+# Configuração da Página
+st.set_page_config(page_title="Tarefas - EduTrack AI", page_icon="📝", layout="wide")
 
-# Recupera o token de autenticação da sessão (Tarefa 14)
+# Aplica Tema Visual Padronizado
+apply_custom_theme()
+
+# Cabeçalho Padronizado
+render_page_header(
+    title="Minhas Tarefas",
+    subtitle="Organize, acompanhe e controle suas entregas e compromissos acadêmicos.",
+    badge_text="Produtividade",
+    icon="📝"
+)
+
+# Recupera o token de autenticação da sessão
 auth_token = st.session_state.get("auth_token")
 
 if not auth_token:
     st.warning("⚠️ Você não está autenticado. Acesse a página **Perfil** para realizar login ou cadastro e sincronizar suas tarefas.")
 
-col1, col2 = st.columns([3, 1])  # Coluna 1 é 3x maior que a 2
+# Barra de Filtros e Busca
+col1, col2 = st.columns([3, 1])
 
 with col1:
-    search = st.text_input("Buscar tarefa...", placeholder="Ex: Estudar Pandas", key="input_search_tarefas")
+    search = st.text_input("Buscar tarefa...", placeholder="Ex: Estudar Banco de Dados ou Projeto Final", key="input_search_tarefas")
 
 with col2:
     filtro = st.selectbox("Status", ["Todas", "Pendente", "Concluída"], key="select_filtro_tarefas")
@@ -40,16 +54,17 @@ else:
         with st.form("form_nova_tarefa", clear_on_submit=True):
             f_col1, f_col2 = st.columns(2)
             with f_col1:
-                nova_titulo = st.text_input("Título da Tarefa *", placeholder="Ex: Entregar trabalho de Banco de Dados")
+                nova_titulo = st.text_input("Título da Tarefa *", placeholder="Ex: Entregar relatório de Sistemas Operacionais")
                 disciplina_idx = st.selectbox(
                     "Disciplina associada",
                     range(len(subject_options)),
                     format_func=lambda i: subject_options[i][0]
                 )
             with f_col2:
-                novo_prazo = st.text_input("Data de Entrega / Prazo", placeholder="Ex: 2026-11-15")
+                novo_prazo = st.text_input("Data de Entrega / Prazo", placeholder="Ex: 2026-11-20")
                 nova_descricao = st.text_area("Descrição (opcional)", placeholder="Detalhes, requisitos ou instruções...")
 
+            st.markdown("<div style='height: 6px;'></div>", unsafe_allow_html=True)
             submitted = st.form_submit_button("Cadastrar Tarefa")
             if submitted:
                 if not nova_titulo.strip():
@@ -113,14 +128,35 @@ else:
                 subj_name = subject_map.get(subj_id, "Não associada") if subj_id else "Não associada"
 
                 is_done = str(status).lower() in ["concluída", "concluida", "completed", "done"]
+                status_badge_html = (
+                    '<span class="edutrack-badge badge-green">✓ Concluída</span>'
+                    if is_done
+                    else '<span class="edutrack-badge badge-amber">⏳ Pendente</span>'
+                )
 
                 with st.expander(f"📌 {task_title}", expanded=True):
                     c_det, c_del = st.columns([4, 1])
                     with c_det:
-                        st.write(f"**Disciplina:** {subj_name}")
+                        st.markdown(
+                            f"""
+                            <div style="display: flex; gap: 8px; align-items: center; margin-bottom: 10px; flex-wrap: wrap;">
+                                {status_badge_html}
+                                <span class="edutrack-badge badge-purple">🏷️ {subj_name}</span>
+                                <span class="edutrack-badge badge-gray">📅 Prazo: {due_date}</span>
+                            </div>
+                            """,
+                            unsafe_allow_html=True
+                        )
+
                         if task_desc:
-                            st.write(f"**Descrição:** {task_desc}")
-                        st.write(f"**Prazo:** {due_date}")
+                            st.markdown(
+                                f"""
+                                <div style="color: #D1D5DB; font-size: 0.92rem; margin-bottom: 12px; background-color: #1A1D27; padding: 10px 14px; border-radius: 8px; border: 1px solid #282B37;">
+                                    {task_desc}
+                                </div>
+                                """,
+                                unsafe_allow_html=True
+                            )
 
                         # Checkbox para alternar status da tarefa
                         check_val = st.checkbox(
@@ -141,6 +177,7 @@ else:
                                     st.error(f"Erro ao atualizar status: {up_msg}")
 
                     with c_del:
+                        st.markdown("<div style='height: 12px;'></div>", unsafe_allow_html=True)
                         if task_id and st.button("🗑️ Excluir", key=f"btn_del_task_{task_id}"):
                             with st.spinner("Excluindo tarefa do Xano..."):
                                 d_ok, d_msg = delete_academic_task(task_id, token=auth_token)
